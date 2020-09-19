@@ -1,68 +1,42 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Dependencias instaladas
 
-In the project directory, you can run:
+axios.
+react-router-dom.
+styled-components.
 
-### `npm start`
+## A tener en cuenta.
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Se añade un link al logo de Mercado Libre junto al input del formulario, de modo que desde cualquier vista sea
+redirigido al inicio si hago click en el logo.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+Al enviar el formulario (hacer click en el botón con la lupa o al oprimir la tecla ENTER), el campo de búsqueda
+se limpia (se retorna el valor del estado a una cadena vacía).
 
-### `npm test`
+El manejo de estados se hace a través del hook useState de React.
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Asimismo, se usan otros hooks tales como useEffect para el manejo de ciclos de vida en los componentes función (todos
+los componentes creados son función), useParams para acceder a los parámetros de ruta, useLocation para acceder al
+location.search.
 
-### `npm run build`
+Al hacer click sobre un producto en la lista de resultados, se navega a la lista de detalles del producto, pero es
+posible que la respuesta del servidor tarde unos segundos y no aparezca nada en el navegador, solo un NaN en donde se
+renderiza el precio, por lo que se hace un renderizado condicional, de modo que aparezca el texto "Cargando..." mientras se obtiene la respuesta y se renderizan todos los elementos.
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Cabe anotar, que hay algunos (muy pocos)  artículos en la API de search, que no tienen la llave "filters" para la construcción del breadCrumb, y en la llave "available_filters" no están las categorías, por lo que se implementa un
+condicional en el componente BreadCrumb para que este solo diga "Categorías", en caso de que no esté disponible
+dicha información, pero que siempre se renderice algo en el breadCrumb, en todo caso, esto sucede con muy pocos
+artículos. El breadCrumb se construye a partir de las categorías de la búsqueda, de la menos a la más específica.
+Para construir este breadCrumb, se guardan los filtros en el estado del componente SearchResult, y se pasa el arreglo por props a un componente hijo llamado BreadCrumb que es el encargado de mapear y renderizar los nombres de las categorías.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+El componente SearchBox o caja de búsqueda, en el archivo App.js, se ubica por fuera de la etiqueta Switch, de modo que este se renderice en todo momento, y pueda iniciar una nueva búsqueda desde cualquier vista.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Para renderizar solo 4 productos en la lista de resultados, se hace uso del método Slice, para limitar la lista resultante al aplicar el método map al arreglo de resultados que retorna el servidor, esto es en el componente Products.js.
 
-### `npm run eject`
+En el componente SearchResult se manejan dos estados, uno para el listado de productos y otro para las categorías de la búsqueda (con las que se construye el breadCrumb).
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+En el componente ProductDetails está el botón comprar, a este se le da estilo usando la librería styled-components, es en el único caso que se usa, solo para demostrar que también se maneja esta herramienta.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Para agregar los separadores de miles y los centavos a los precios de los productos, se usa el método Intl.NumberFormat, especificando que la divisa es ARS.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+El breadCrumb de la vista de detalles del producto, se construye a partir de ciertos atributos comunes a todos los ítems, y que, como se pedía, hacen referencia al producto en específico, tales como la marca, la línea y el modelo. Se hace primero un filtro del arreglo de atributos, para encontrar los objetos con id BRAND, LINE y MODEL, y luego se mapea el arreglo resultante, para renderizar la llave value_name.

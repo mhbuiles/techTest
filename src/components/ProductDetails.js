@@ -5,7 +5,6 @@ import {
 } from 'react-router-dom';
 import axios from 'axios';
 import styled from 'styled-components'
-import BreadCrumb from './BreadCrumb';
 
 const BuyButton = styled.button`
    width: 180px;
@@ -21,6 +20,7 @@ const BuyButton = styled.button`
 function ProductDetails( ) {
 
   const [ product , setProduct ] = useState( {} );
+  const [ attributes , setAttributes ] = useState( [] );
   const [ description , setDescription ] = useState( '' );
   let { id } = useParams();
 
@@ -35,6 +35,7 @@ function ProductDetails( ) {
     })
     .then( data => {
       setProduct( data.data )
+      setAttributes(data.data.attributes)
     })
     .catch( function (error) {
         console.log(error);
@@ -57,6 +58,13 @@ function ProductDetails( ) {
 
   return(
     <div>
+      <div className = 'detailsBreadcrumb'>
+        { attributes.length > 0 && attributes.filter( obj =>{
+          return obj.id === "BRAND" || obj.id === "LINE" || obj.id === "MODEL"
+        }).map(  (obj) => {
+          return <p key = {obj.id}> {obj.value_name} > &nbsp; </p>
+        })}
+      </div>
       <div className = 'productDetailsContainer'>
         <div className = 'productDetailsSmallCont'>
           <img className = 'productDetailsPicture' src = { product.thumbnail } alt = ''/>
