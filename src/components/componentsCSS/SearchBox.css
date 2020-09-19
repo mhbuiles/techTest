@@ -1,0 +1,23 @@
+.containerSearchBox{
+  width: 100%;
+  background-color: #FFE600;
+  padding: 10px;
+}
+.formImage{
+  width: 50px;
+  height: 30px;
+  padding-right: 20px;
+}
+.formInput{
+  width: 500px;
+  height: 30px;
+  font-size: 18px;
+}
+.formButton{
+  width: 50px;
+  height: 36px;
+  cursor: pointer;
+}
+.form{
+  display: inline-flex;
+}
